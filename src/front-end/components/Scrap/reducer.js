@@ -6,7 +6,8 @@ import {
 const initialState = {
     indexs: {},
     loading: false,
-    error: {}
+    error: {},
+    clear: {}
 };
 
 export default function searchReducer(state = initialState, action) {
@@ -26,7 +27,10 @@ export default function searchReducer(state = initialState, action) {
             }
         case 'SEARCH_NEW_INDEXS_START': {
             return getNewState(state, {
-                loading: true
+                loading: true,
+                error: {},
+                indexs: {},
+                clear: {}
             });
         }
         case 'SEARCH_NEW_INDEXS_ERROR': {
@@ -38,9 +42,45 @@ export default function searchReducer(state = initialState, action) {
 
             return getNewState(state, {
                 loading: false,
-                error: response
+                error: response,
+                indexs: {},
+                clear: {}
             });
 
+        }
+        case 'CLEAR_INDEXS_START': {
+            return getNewState(state, {
+                loading: true,
+                error: {},
+                indexs: {},
+                clear: {}
+            });
+        }
+        case 'CLEAR_INDEXS_SUCCESS': {
+            const {
+                    payload: {
+                        response = {}
+                    }
+                } = action;
+
+            console.log('clear success', action);
+            return getNewState(state, {
+                loading: false,
+                clear: response,
+                indexs: {}
+            });
+        }
+        case 'CLEAR_INDEXS_ERROR': {
+            const {
+                    payload: {
+                        response = {}
+                    }
+                } = action;
+            return getNewState(state, {
+                loading: false,
+                error: response,
+                indexs: {}
+            });
         }
         default:
             return state;

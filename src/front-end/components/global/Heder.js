@@ -16,20 +16,25 @@ class Header extends Component {
         const { title, items } = this.props;
         return (
             <div className="Header">
-                <div className="Logo">
-                    <img src={logo} alt="logo" />
-                    <h2>{title}</h2>
-
-                    <ul className="Menu">
-                        {
-                            items && items.map(
-                                (item, key) => <li key={key}><Link to={item.url}>{item.title}</Link></li>
-                            )
-                        }
+                    <ul className="Menu">    
+                        <li><Link to={items[0].url}>{items[0].title}</Link></li>                             
+                        <li>|</li>                             
+                        <li><Link to={items[1].url}>{items[1].title}</Link></li>                             
                     </ul>
-                </div>
             </div>
         );
+        // return (
+        //     <div className="Header">
+        //         <div className="Logo">
+        //             <ul className="Menu">                        {
+        //                     items && items.map(
+        //                         (item, key) => <li key={key}><Link to={item.url}>{item.title}</Link></li>
+        //                     )
+        //                 }
+        //             </ul>
+        //         </div>
+        //     </div>
+        // );
     }
 }
 

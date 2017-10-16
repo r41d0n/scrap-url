@@ -13,7 +13,7 @@ class Footer extends Component {
         const { copyright = '&copy; React 2017' } = this.props;
         return (
             <div className="Footer">
-                <p dangerouslySetInnerHTML={{ __html: copyright }} />
+                <h6 dangerouslySetInnerHTML={{ __html: copyright }} />
             </div>
         );
     }

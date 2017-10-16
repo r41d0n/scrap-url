@@ -4,12 +4,23 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+//material
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+
 //Actions
 import * as actions from './actions';
+
+//Assets
+import './index.css';
 
 //Util
 import { isFirstRender } from '../../../lib/utils/frontend';
 import { isArray, isDefined, isObject, isFunction } from '../../../lib/utils/is';
+
+//Components
+import DataTable from '../utiles/dataTable';
+import ItemPresent from '../utiles/ItemPresent';
 
 class Search extends Component {
     static propTypes = {
@@ -20,6 +31,7 @@ class Search extends Component {
         super(props);
         this.state = {
             search: '',
+            errorText: '',
             listarPages: false
         };
         this.handelSearchonChange = this.handelSearchonChange.bind(this);
@@ -50,40 +62,65 @@ class Search extends Component {
     }
 
     handelSearchonChange(e) {
-        this.setState({
-            search: e.target.value
-        })
+        if (e.target.value !== '') {
+            this.setState({
+                search: e.target.value,
+                errorText: ''
+            })
+        } else {
+            this.setState({
+                search: e.target.value,
+                errorText: 'This field is required'
+            })
+        }
     }
     handleSearchonclick(e) {
-        this.props.loadPagesOcurrency({ word: this.state.search });
-        this.setState({
-            listarPages: true
-        });
-        console.log('El valor de pages en el onclik', this.props.pages);
+        if (this.state.search !== '') {
+            this.props.loadPagesOcurrency({ word: this.state.search });
+            this.setState({
+                listarPages: true,
+                errorText: ''
+            });
+        } else {
+            console.log('no valido');
+            this.setState({
+               errorText: 'This field is required'
+            })
+        }
     }
 
     render() {
         const { pages } = this.props;
-        console.log('Estas son las props', this.props);
         if (!this.state.listarPages) {
             return (
-                <div>
-                    <br />
-                    <input type="text" onChange={this.handelSearchonChange} />
-                    <button onClick={this.handleSearchonclick}>Search</button>
+                <div className="Search">
+                    <TextField
+                        errorText={this.state.errorText}
+                        hintText="Enter Word"
+                        fullWidth={true}
+                        className="textField"
+                        onChange={this.handelSearchonChange}
+                    />
+                    <RaisedButton label="Search" onClick={this.handleSearchonclick} primary={true} />
                 </div>
             );
         } else {
             const { cant = 0 } = pages;
+            let show = pages.cant > 1 ? `Found ${pages.cant} results` : `Found ${pages.cant} result`
             return (
-                <div>
-                    <br />
-                    <input type="text" onChange={this.handelSearchonChange} />
-                    <button onClick={this.handleSearchonclick}>Search</button>
-                    <h2>Found {pages.cant} results</h2>
-
-                    {this.renderPgesList(pages)}
-
+                <div >
+                    <div className="Search">
+                        <TextField
+                            errorText={this.state.errorText}
+                            hintText="Enter Word"
+                            fullWidth={true}
+                            className="textField"
+                            onChange={this.handelSearchonChange}
+                        />
+                        <RaisedButton label="Search" onClick={this.handleSearchonclick} primary={true} />
+                    </div>
+                    <h3>{show}</h3>
+                    <ItemPresent items={pages.datos} />
                 </div>
             );
         }

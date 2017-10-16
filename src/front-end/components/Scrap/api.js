@@ -12,6 +12,9 @@ class ScraphApi {
     static getNewIndex(query) {
         return apiFetch(API.Scrap.Indexs, {}, query);
     };
+    static getClearIndex() {
+        return apiFetch(API.Scrap.Clear);
+    };
 
 }
 

@@ -4,5 +4,6 @@ export const API = Object.freeze({
     },
     Scrap: {
         Indexs: 'scrap/indexed',
+        Clear: 'scrap/clear',
     }
 });

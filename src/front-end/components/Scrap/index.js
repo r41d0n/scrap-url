@@ -4,16 +4,24 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+//material
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+
+//Assets
+import './index.css';
+
 //Actions
 import * as actions from './actions';
 
 //Util
 import { isFirstRender } from '../../../lib/utils/frontend';
-import { isArray, isDefined, isObject, isFunction } from '../../../lib/utils/is';
+import { isArray, isDefined, isObject, isFunction, isUrl } from '../../../lib/utils/is';
 
 class Scrap extends Component {
     static propTypes = {
         loadNewIndexs: PropTypes.func.isRequired,
+        clearIndex: PropTypes.func.isRequired,
         indexs: PropTypes.object,
         loading: PropTypes.bool.isRequired,
         error: PropTypes.object
@@ -22,11 +30,12 @@ class Scrap extends Component {
         super(props);
         this.state = {
             url: '',
-            listarResult: false
+            listarResult: false,
+            errorUrl: ''
         };
         this.handelIndexOnChange = this.handelIndexOnChange.bind(this);
         this.handleIndexClick = this.handleIndexClick.bind(this);
-        this.handleClearClick = this.handleClearClick.bind(this);
+        this.handelClearIndexOnClick = this.handelClearIndexOnClick.bind(this);
     };
 
     handelIndexOnChange(e) {
@@ -34,20 +43,24 @@ class Scrap extends Component {
             url: e.target.value
         });
     };
+    handelClearIndexOnClick() {
+        this.props.clearIndex();
+    }
     handleIndexClick(e) {
-        this.props.loadNewIndexs({ url: this.state.url });
-        this.setState({
-            listarResult: true
-        });
-    };
-    handleClearClick(e) {
-        this.props.loadNewIndexs({ url: this.state.url });
-        this.setState({
-            listarResult: true
-        });
+        if (isUrl(this.state.url)) {
+            this.props.loadNewIndexs({ url: this.state.url });
+            this.setState({
+                listarResult: true
+            });
+        } else {
+            this.setState({
+                listarResult: true,
+                errorUrl: 'This url is invalid'
+            });
+        }
     };
     render() {
-        const { indexs, loading, error } = this.props;
+        const { indexs, loading, clear, error } = this.props;
 
         const style = {
             marginRight: '1rem'
@@ -55,52 +68,87 @@ class Scrap extends Component {
 
         if (loading) {
             return (
-                <div>
-                    <br />
+                <div className="scrap">
                     <h4>Cargando .....</h4>
-                    <br />
-                    <input type="text" onChange={this.handelIndexOnChange} />
-                    <br />
-                    <br />
-                    <button onClick={this.handleIndexClick} style={style}>Index</button>
-                    <button onClick={this.handleIndexClick}>Clear</button>
+                    <TextField
+                        errorText={this.state.errorUrl}
+                        hintText="Enter Url"
+                        className="textField"
+                        fullWidth={true}
+                        onChange={this.handelIndexOnChange}
+                    />
+                    <div className="Acciones">
+                        <RaisedButton label="Index" className="btn-1" onClick={this.handleIndexClick} primary={true} />
+                        <RaisedButton label="Clear" onClick={this.handelClearIndexOnClick} secondary={true} />
+                    </div>
                 </div>
             );
         } else {
             if (isDefined(indexs) && isObject(indexs) && indexs.hasOwnProperty('cantPages') && indexs.hasOwnProperty('cantWords')) {
                 return (
-                    <div>
-                        <br />
-                        <input type="text" onChange={this.handelIndexOnChange} />
-                        <br />
-                        <br />
-                        <button onClick={this.handleIndexClick} style={style}>Index</button>
-                        <button onClick={this.handleIndexClick}>Clear</button>
-                        <br />
-                        <br />
-                        <h6>Indexed {indexs.cantPages} new pages and {indexs.cantWords} words.</h6>
+                    <div className="scrap">
+                        <TextField
+                            errorText={this.state.errorUrl}
+                            hintText="Enter Url"
+                            className="textField"
+                            fullWidth={true}
+                            onChange={this.handelIndexOnChange}
+                        />
+                        <div className="Acciones">
+                            <RaisedButton label="Index" className="btn-1" onClick={this.handleIndexClick} primary={true} />
+                            <RaisedButton label="Clear" onClick={this.handelClearIndexOnClick} secondary={true} />
+                        </div>
+                        <h3 className="result">Indexed {indexs.cantPages} new pages and {indexs.cantWords} words.</h3>
                     </div>
                 );
             } else if (isDefined(error) && isObject(error) && error.hasOwnProperty('mensage')) {
                 return (
-                    <div>
-                        <br />
-                        <input type="text" onChange={this.handelIndexOnChange} />
-                        <br />
-                        <br />
-                        <button onClick={this.handleIndexClick} style={style}>Index</button>
-                        <button onClick={this.handleIndexClick}>Clear</button>
+                    <div className="scrap">
+                        <TextField
+                            errorText={this.state.errorUrl}
+                            hintText="Enter Url"
+                            className="textField"
+                            fullWidth={true}
+                            onChange={this.handelIndexOnChange}
+                        />
+                        <div className="Acciones">
+                            <RaisedButton label="Index" className="btn-1" onClick={this.handleIndexClick} primary={true} />
+                            <RaisedButton label="Clear" onClick={this.handelClearIndexOnClick} secondary={true} />
+                        </div>
+                    </div>
+                );
+            } else if (isDefined(clear) && isObject(clear) && clear.hasOwnProperty('mensage')) {
+                console.log('entro en el clear');
+                return (
+                    <div className="scrap">
+                        <TextField
+                            errorText={this.state.errorUrl}
+                            hintText="Enter Url"
+                            className="textField"
+                            fullWidth={true}
+                            onChange={this.handelIndexOnChange}
+                        />
+                        <div className="Acciones">
+                            <RaisedButton label="Index" className="btn-1" onClick={this.handleIndexClick} primary={true} />
+                            <RaisedButton label="Clear" onClick={this.handelClearIndexOnClick} secondary={true} />
+                        </div>
+                        <h3 className="result">Index cleared.</h3>
                     </div>
                 );
             } else {
                 return (
-                    <div>
-                        <br />
-                        <input type="text" onChange={this.handelIndexOnChange} />
-                        <br />
-                        <br />
-                        <button onClick={this.handleIndexClick} style={style}>Index</button>
-                        <button onClick={this.handleIndexClick}>Clear</button>
+                    <div className="scrap">
+                        <TextField
+                            errorText={this.state.errorUrl}
+                            hintText="Enter Url"
+                            className="textField"
+                            fullWidth={true}
+                            onChange={this.handelIndexOnChange}
+                        />
+                        <div className="Acciones">
+                            <RaisedButton label="Index" className="btn-1" onClick={this.handleIndexClick} primary={true} />
+                            <RaisedButton label="Clear" onClick={this.handelClearIndexOnClick} secondary={true} />
+                        </div>
                     </div>
                 );
             }
@@ -112,5 +160,6 @@ class Scrap extends Component {
 export default connect(state => ({
     indexs: state.scrap.indexs,
     loading: state.scrap.loading,
+    clear: state.scrap.clear,
     error: state.scrap.error
 }), actions)(Scrap);

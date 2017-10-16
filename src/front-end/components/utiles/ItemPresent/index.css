@@ -1,0 +1,19 @@
+.ItemPresent {
+    width: 50%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.ItemPresent ul {
+    list-style: none;
+    padding: 0px;
+}
+.ItemPresent ul li{
+    margin-bottom:  1rem;
+    padding: 0px;
+}
+
+.ItemPresent li a {
+    margin: 0px;
+    padding: 0px;
+}
