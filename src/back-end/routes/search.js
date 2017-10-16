@@ -13,8 +13,9 @@ let cuentaOcurrencia = (texto, cadena) => {
     return cuenta;
 };
 
-router.route('/search').post((req, res) => {
+router.route('/search').get((req, res) => {
     let word = req.query.word || req.params.word || req.body.word || req.headers['word'];
+    console.log('llego aqui con', word);
 
     if (!word) {
         return res.status(203).send(false);
@@ -34,8 +35,10 @@ router.route('/search').post((req, res) => {
                 datos.push(json);
             }
             res.status(200).send({
-                "cant": datos.length,
-                "datos": datos
+                response: {
+                    "cant": datos.length,
+                    "datos": datos
+                }
             });
         });
     }
