@@ -139,70 +139,90 @@ let listUrl = () => {
 
 
 
-
-router.route('/indexed').post((req, res) => {
+router.route('/indexed').get((req, res) => {
     pagesVisited = [];
     let url = req.query.url || req.params.url || req.body.url || req.headers['url'];
     let cantpages = req.query.cantpages || req.params.cantpages || req.body.cantpages || req.headers['cantpages'];
 
-    if (!cantpages) {
-        cantpages = 5;
-    }
+    console.log('la url que llego es', url);
 
+    if (!cantpages) {
+        cantpages = 10;
+    }
     let index = [];
 
-    searchUrl(url).then(data => {
-            if (data) {
-                return Promise.reject(203);
-            } else {
-                return listUrl();
+    if (!url) {
+        return res.status(203).send({
+            response: {
+                mensage: 'Inserte una url'
             }
-        })
-        .then(response => {
-            if (response) {
-                for (var i = 0; i < response.length; i++) {
-                    pagesVisited[response[i].url] = true;
-                }
-            }
-            return procesar(url);
-        })
-        .then(response => {
-            // 1er nivel
-            index.push(response.objeto);
-            return new Promise((resolve, reject) => {
-                resolve(response.links);
-            });
-        })
-        .then((links) => {
-            //2do nivel
-            let algunosVals = links.slice(0, cantpages);
-            return lisurls(algunosVals);
-        })
-        .then((datos) => {
-            //3cer nivel
-            for (var i = 0; i < datos.index.length; i++) {
-                index.push(datos.index[i]);
-            }
-            let algunosVals = datos.links.slice(0, cantpages);
-            return lisurls(algunosVals);
-        }).then(datos => {
-            //niveles terminados procesado de datos
-            for (var i = 0; i < datos.index.length; i++) {
-                index.push(datos.index[i]);
-            }
-
-            //Insertando en la bd
-            return Index.create(index);
-        }).then(data => {
-            let cantWord = palabrasTotal(data);
-            return res.status(200).send("Indexed " + data.length + " new pages and " + cantWord + " words.");
-        })
-        .catch(err => {
-            console.log(err);
-            if (err == 203) return res.send(203);
         });
+    } else {
+
+        searchUrl(url).then(data => {
+                if (data) {
+                    return Promise.reject(203);
+                } else {
+                    return listUrl();
+                }
+            })
+            .then(response => {
+                if (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        pagesVisited[response[i].url] = true;
+                    }
+                }
+                return procesar(url);
+            })
+            .then(response => {
+                // 1er nivel
+                index.push(response.objeto);
+                return new Promise((resolve, reject) => {
+                    resolve(response.links);
+                });
+            })
+            .then((links) => {
+                //2do nivel
+                let algunosVals = links.slice(0, cantpages);
+                return lisurls(algunosVals);
+            })
+            .then((datos) => {
+                //3cer nivel
+                for (var i = 0; i < datos.index.length; i++) {
+                    index.push(datos.index[i]);
+                }
+                let algunosVals = datos.links.slice(0, cantpages);
+                return lisurls(algunosVals);
+            }).then(datos => {
+                //niveles terminados procesado de datos
+                for (var i = 0; i < datos.index.length; i++) {
+                    index.push(datos.index[i]);
+                }
+
+                //Insertando en la bd
+                return Index.create(index);
+            }).then(data => {
+                let cantWord = palabrasTotal(data);
+                // return res.status(200).send("Indexed " + data.length + " new pages and " + cantWord + " words.");
+                return res.status(200).send({
+                    response: {
+                        cantPages: data.length,
+                        cantWords: cantWord
+
+                    }
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                if (err == 203) return res.send({
+                    response: {
+                        mensage: 'Inserte una url'
+                    }
+                });
+            });
 
 
+    }
 });
 
 
