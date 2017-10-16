@@ -52,6 +52,8 @@ class Scrap extends Component {
             this.setState({
                 listarResult: true
             });
+
+            console.log('estas son las props :',this.props)
         } else {
             this.setState({
                 listarResult: true,
@@ -101,7 +103,7 @@ class Scrap extends Component {
                         <h3 className="result">Indexed {indexs.cantPages} new pages and {indexs.cantWords} words.</h3>
                     </div>
                 );
-            } else if (isDefined(error) && isObject(error) && error.hasOwnProperty('mensage')) {
+            } else if (isDefined(indexs) && isObject(indexs) && indexs.hasOwnProperty('mensage')) {
                 return (
                     <div className="scrap">
                         <TextField
@@ -115,6 +117,7 @@ class Scrap extends Component {
                             <RaisedButton label="Index" className="btn-1" onClick={this.handleIndexClick} primary={true} />
                             <RaisedButton label="Clear" onClick={this.handelClearIndexOnClick} secondary={true} />
                         </div>
+                         <h3 className="result">{indexs.mensage}.</h3>
                     </div>
                 );
             } else if (isDefined(clear) && isObject(clear) && clear.hasOwnProperty('mensage')) {

@@ -14,6 +14,7 @@ export default function searchReducer(state = initialState, action) {
     switch (action.type) {
         case 'SEARCH_NEW_INDEXS_SUCCESS':
             {
+                console.log('Se ejecuto el SUCCESS', action);
                 const {
                     payload: {
                         response = {}
@@ -25,63 +26,71 @@ export default function searchReducer(state = initialState, action) {
                     loading: false
                 });
             }
-        case 'SEARCH_NEW_INDEXS_START': {
-            return getNewState(state, {
-                loading: true,
-                error: {},
-                indexs: {},
-                clear: {}
-            });
-        }
-        case 'SEARCH_NEW_INDEXS_ERROR': {
-            const {
+        case 'SEARCH_NEW_INDEXS_START':
+            {
+                console.log('Se ejecuto el start', action);
+                return getNewState(state, {
+                    loading: true,
+                    error: {},
+                    indexs: {},
+                    clear: {}
+                });
+            }
+        case 'SEARCH_NEW_INDEXS_ERROR':
+            {
+                const {
                     payload: {
                         response = {}
                     }
                 } = action;
 
-            return getNewState(state, {
-                loading: false,
-                error: response,
-                indexs: {},
-                clear: {}
-            });
+                console.log('Se ejecuto el error', action);
 
-        }
-        case 'CLEAR_INDEXS_START': {
-            return getNewState(state, {
-                loading: true,
-                error: {},
-                indexs: {},
-                clear: {}
-            });
-        }
-        case 'CLEAR_INDEXS_SUCCESS': {
-            const {
+                return getNewState(state, {
+                    loading: false,
+                    error: response,
+                    indexs: {},
+                    clear: {}
+                });
+
+            }
+        case 'CLEAR_INDEXS_START':
+            {
+                return getNewState(state, {
+                    loading: true,
+                    error: {},
+                    indexs: {},
+                    clear: {}
+                });
+            }
+        case 'CLEAR_INDEXS_SUCCESS':
+            {
+                const {
                     payload: {
                         response = {}
                     }
                 } = action;
 
-            console.log('clear success', action);
-            return getNewState(state, {
-                loading: false,
-                clear: response,
-                indexs: {}
-            });
-        }
-        case 'CLEAR_INDEXS_ERROR': {
-            const {
+                console.log.log('clear success', action);
+                return getNewState(state, {
+                    loading: false,
+                    clear: response,
+                    indexs: {}
+                });
+            }
+        case 'CLEAR_INDEXS_ERROR':
+            {
+                const {
                     payload: {
                         response = {}
                     }
                 } = action;
-            return getNewState(state, {
-                loading: false,
-                error: response,
-                indexs: {}
-            });
-        }
+                return getNewState(state, {
+                    loading: false,
+                    error: response,
+                    indexs: {}
+                });
+            }
         default:
             return state;
 

@@ -102,7 +102,7 @@ let procesar = (url) => {
         };
     }).catch(err => {
         console.log('BAD');
-        Promise.reject(err);
+        // Promise.reject(err);
     });
 };
 
@@ -218,9 +218,9 @@ router.route('/indexed').get((req, res) => {
                 });
             })
             .catch(err => {
-                if (err == 203) return res.statu(400).send({
+                if (err == 203) return res.status(203).send({
                     response: {
-                        mensage: 'Inserte una url'
+                        mensage: 'Url ya indexada'
                     }
                 });
             });
