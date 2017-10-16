@@ -4,13 +4,13 @@ import path from 'path';
 import chunksPlugin from 'webpack-split-chunks';
 
 //Enviroment
-process.env.NODE_ENV = 'production';
+// process.env.NODE_ENV = 'production';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 //Paths
 const PATH = {
-    index: path.join(__dirname, 'src/front-end/index.js'),
+    index: path.join(__dirname, '/src/front-end/index.js'),
     bild: path.join(__dirname, '/src/front-end/public'),
-    src: path.join(__dirname, 'src/front-end')
+    src: path.join(__dirname, '/src')
 }
 
 
@@ -37,21 +37,26 @@ const getPlugins = () => {
         to: 'vendor',
         test: /node_modules/
     });
-    if (isDevelopment) {
-        plugins.push(
-            new webpack.HotModuleReplacementPlugin(),
-            new webpack.NoEmitOnErrorsPlugin()
-        );
-    } else {
-        plugins.push(
-            new webpack.optimize.UglifyJsPlugin({
-                compress: {
-                    screw_ie8: true,
-                    warnings: false
-                }
-            })
-        );
-    }
+    // if (isDevelopment) {
+    //     plugins.push(
+    //         new webpack.HotModuleReplacementPlugin(),
+    //         new webpack.NoEmitOnErrorsPlugin()
+    //     );
+    // } else {
+    //     plugins.push(
+    //         new webpack.optimize.UglifyJsPlugin({
+    //             compress: {
+    //                 screw_ie8: true,
+    //                 warnings: false
+    //             }
+    //         })
+    //     );
+    // }
+
+    plugins.push(
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoEmitOnErrorsPlugin()
+    );
 
     return plugins;
 };
