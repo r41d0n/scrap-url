@@ -9,29 +9,45 @@ import open from 'open';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import exphbs from 'express-handlebars';
 
-
-
+//Config
+import config from '../../config';
 
 //webpack configuration
 import webpackConfig from '../../../webpack.config.babel';
 
-//Congig server 
-const config = require('../config/config');
+//API
+import scrapApi from '../routes/scrappromise';
+import searchApi from '../routes/search';
 
-//Server port
-const port = config.port;
+// Helpers
+import * as hbsHelper from '../../lib/handelbars';
+
+//Utils
+import {
+    isMovile
+} from '../../lib/utils/device';
 
 //Enviroment
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const isDevelopment = process.env.NODE_ENV !== 'production';
-
 
 //Express app
 const app = express();
 
 //public
 app.use(express.static(path.join(__dirname, '../../front-end/public')));
+
+//Handlebars setup
+app.engine(config.views.engine, exphbs({
+    extname: config.views.extension,
+    helpers: hbsHelper
+}));
+
+//View Engine Setup
+app.set('views', path.join(__dirname, config.views.path));
+app.set('view engine', '.hbs');
 
 // conectar a MongoDB
 mongoose.connect(config.database);
@@ -47,34 +63,38 @@ app.use(function (req, res, next) {
     next();
 });
 
-//server routes
-let scrap = require('../routes/scrappromise');
-let search = require('../routes/search');
-
-app.use('/search', search);
-app.use('/promise', scrap);
-
 // Webpack compiler
 const webpackCompiler = webpack(webpackConfig);
+
 // Webpack middlewares
-if (isDevelopment) {
+// if (isDevelopment) {
+//     app.use(webpackDevMiddleware(webpackCompiler));
+//     app.use(webpackHotMiddleware(webpackCompiler));
+// }
     app.use(webpackDevMiddleware(webpackCompiler));
     app.use(webpackHotMiddleware(webpackCompiler));
-}
+
+// Device  detector
+app.use((req, res, next) => {
+    res.locals.isMobile = isMovile(req.headers['user-agent']);
+    return next();
+});
+
+//API dispath
+app.use('/api/search', searchApi);
+app.use('/api/scrap', scrapApi);
+
 
 //Sending  trafic to react
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.render('frontend/index', {
+        layout: false
+    })
 });
 
-
-
-
 // Iniciar servidor
-app.listen(port, err => {
-    console.log('La magia esta en el puerto ' + port);
-    console.log("esta en: ", process.env.NODE_ENV);
+app.listen(config.serverPort, err => {
     if (!err) {
-        open(`http://127.0.0.1:${port}`);
+        open(`${config.baseUrl}`);
     }
 });
