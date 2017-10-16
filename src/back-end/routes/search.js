@@ -15,7 +15,6 @@ let cuentaOcurrencia = (texto, cadena) => {
 
 router.route('/search').get((req, res) => {
     let word = req.query.word || req.params.word || req.body.word || req.headers['word'];
-    console.log('llego aqui con', word);
 
     if (!word) {
         return res.status(203).send(false);

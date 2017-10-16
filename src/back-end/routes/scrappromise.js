@@ -22,7 +22,7 @@ let palabrasTotal = (datos) => {
     }).reduce((a, b) => {
         return a + b;
     });
-    console.log('la cantidad de palabras es ', cantidad);
+ 
     return cantidad;
 };
 let cantPalabras = (texto) => {
@@ -144,7 +144,6 @@ router.route('/indexed').get((req, res) => {
     let url = req.query.url || req.params.url || req.body.url || req.headers['url'];
     let cantpages = req.query.cantpages || req.params.cantpages || req.body.cantpages || req.headers['cantpages'];
 
-    console.log('la url que llego es', url);
 
     if (!cantpages) {
         cantpages = 10;
@@ -213,8 +212,7 @@ router.route('/indexed').get((req, res) => {
                 });
             })
             .catch(err => {
-                console.log(err);
-                if (err == 203) return res.send({
+                if (err == 203) return res.statu(400).send({
                     response: {
                         mensage: 'Inserte una url'
                     }
@@ -223,6 +221,24 @@ router.route('/indexed').get((req, res) => {
 
 
     }
+});
+
+router.route('/clear').get((req, res) => {
+
+    Index.remove().then(err => {
+        return res.status(200).send({
+            response: {
+                mensage: 'Eliminado Correctamente'
+            }
+        });
+    }).catch(err => {
+        return res.status(400).send({
+            response: {
+                mensage: 'Inespected error'
+            }
+        });
+    })
+
 });
 
 
