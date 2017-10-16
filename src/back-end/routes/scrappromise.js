@@ -22,7 +22,7 @@ let palabrasTotal = (datos) => {
     }).reduce((a, b) => {
         return a + b;
     });
- 
+
     return cantidad;
 };
 let cantPalabras = (texto) => {
@@ -36,6 +36,12 @@ let cantPalabras = (texto) => {
 let limpiarTexto = (texto) => {
     let temporal = texto;
     let sinsaltos = temporal.split("\n").join("");
+    sinsaltos = sinsaltos.split("\t").join("");
+    sinsaltos = sinsaltos.replace(/&(lt|gt);/g,
+        function (strMatch, p1) {
+            return (p1 == "lt") ? "<" : ">";
+        });
+    sinsaltos = sinsaltos.replace(/<\/?[^>]+(>|$)/g, "");
     sinsaltos = sinsaltos.replace(variosBlancos, " ");
     sinsaltos = sinsaltos.replace(primerBlanco, "");
     sinsaltos = sinsaltos.replace(ultimoBlanco, "");

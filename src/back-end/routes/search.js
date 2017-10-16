@@ -5,7 +5,7 @@ let Index = require('../models/index');
 
 let cuentaOcurrencia = (texto, cadena) => {
     let cuenta = 0;
-    let posicion = texto.indexOf(cadena);
+    let posicion = texto.toLowerCase().indexOf(cadena.toLowerCase());
     while (posicion != -1) {
         cuenta++;
         posicion = texto.indexOf(cadena, posicion + 1);
