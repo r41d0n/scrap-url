@@ -14,7 +14,6 @@ class Header extends Component {
     }
     render() {
         const { title, items } = this.props;
-        console.log(items);
         return (
             <div className="Header">
                 <div className="Logo">

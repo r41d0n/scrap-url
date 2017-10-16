@@ -8,13 +8,18 @@ import Scrap from './components/Scrap';
 import Search from './components/Search';
 import Page404 from './components/Page404';
 
+// import Home from './containers/Home';
+
+
 const AppRoutes = () =>
     <App>
         <Switch>
-            <Route exact path="/" component={Scrap} />
             <Route exact path="/Search" component={Search} />
+            <Route exact path="/" component={Scrap} />
             <Route component={Page404} />
         </Switch>
     </App>
 
 export default AppRoutes;
+
+            // <Route exact path="/" component={Home} />

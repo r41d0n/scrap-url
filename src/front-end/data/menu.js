@@ -1,4 +1,8 @@
 export default [
+    // {
+    //     title: 'Home',
+    //     url: '/'
+    // },
     {
         title: 'Indexed',
         url: '/'
